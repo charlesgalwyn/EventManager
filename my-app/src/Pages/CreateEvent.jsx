@@ -22,7 +22,6 @@ const CreateEvent = () => {
         const handleSubmit =  (e) => {
             e.preventDefault();
             console.log(data);
-            // Make a request to the backend to create an event using axios
             axios.post('https://playo-app-5s2g.onrender.com/events', {...data, creator: user._id, pending: [], attendees : []}).then(res=>{
                 console.log(res);
                 toast({
