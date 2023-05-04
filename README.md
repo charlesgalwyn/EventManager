@@ -2,9 +2,9 @@
 
 https://playo-app-5s2g.onrender.com/events
 
-## Backend Localhost
+## Backend Repo Link
 
-http://localhost:8080/api/event
+https://github.com/charlesgalwyn/EventManager-Backend
 
 ## Frontend Deployed Link
 
