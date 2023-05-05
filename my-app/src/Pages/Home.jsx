@@ -7,7 +7,6 @@ import { Image } from '@chakra-ui/react'
 function Home() {
   
   const {user} = useSelector(store => store.authStore);
-  console.log(user)
   
    return (
     <Box>

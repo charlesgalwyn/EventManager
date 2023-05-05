@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useToast } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 
-const EventDetail = () => {
+const EventDetail2 = () => {
 
   const params  = useParams();
   const {token} = useSelector(store => store.authStore);
@@ -25,45 +25,65 @@ const EventDetail = () => {
     }
     return a || b ;
   }
-
-
-  const handleAddRequest = () => {
-    if (user._id === event.creator){
-       alert("Event is created by You")
+   
+  const handleAccept = (id) => {
+    if(event.limit === event.attendees?.length){
+     alert("No Slot is available")
     }
     else{
-       if(event.limit === event.attendees?.length){
-       alert("Cannot Send Request")
-    }
-    else{
-     fetch(`https://playo-app-5s2g.onrender.com/events/${params.id}/request`, {
+      fetch(`https://playo-app-5s2g.onrender.com/events/${params.id}/accept`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({userId: user._id}),
+      body: JSON.stringify({userId: id}),
     })
     .then((response) => response.json())
-    .then((data) => {setEvent(data.event); console.log(data);toast({
-                  title: 'Request.',
-                  description: "Request sent successfully",
+    .then((data) => {setEvent(data); console.log(data);
+                toast({
+                  title: 'Accepted.',
+                  description: "Participant accepted successfully",
                   status: 'success',
                   duration: 1000,
                 isClosable: true,
                 })})
     .catch((err) => {console.log(err);});
     }
-    }
-  
+    
   }
-   
+
+
+  
+
+  const handleReject = (id) => {
+    fetch(`https://playo-app-5s2g.onrender.com/events/${params.id}/reject`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({userId: id}),
+    })
+    .then((response) => response.json())
+    .then((data) => {setEvent(data); console.log(data); toast({
+                  title: 'Rejected.',
+                  description: "Participant rejected successfully",
+                  status: 'error',
+                  duration: 1000,
+                isClosable: true,
+                })})
+    .catch((err) => {console.log(err);});
+  }
+
+
+
+
 
   React.useEffect(() => {
     fetch(`https://playo-app-5s2g.onrender.com/events/${params.id}`)
     .then((response) => response.json())
-    .then((data) => {setEvent(data);
-      const dateObj = new Date(data.date); 
-      setTime(currentTime-dateObj) })
+    .then((data) => {setEvent(data); console.log(data)
+    const dateObj = new Date(data.date); 
+      setTime(currentTime-dateObj)})
     .catch((err) => {console.log(err);});
   }, [params.id]);
 
@@ -106,10 +126,35 @@ const EventDetail = () => {
         <b>Number of Slots available</b>
         <h2>{event.limit - event.attendees?.length}</h2>
       </Box>
-      <Button marginTop="20px" marginBottom="20px" onClick={handleAddRequest} colorScheme={+event.limit<= event.attendees?.length?'red':'green'} > Request to join</Button>
-                
+      <Box>
+              <b>Members of the Event</b>
+           {
+            event.attendees ?.map((item, index) => {
+          return <Box key={index}>
+            <h2>{item?.name}</h2>
+          </Box>
+        })}
+      </Box>
+      {user._id==event.creator&&
+        
+        
+            <Box>
+              <b>Pending Requests</b>
+           {
+            event.pending ?.map((item, index) => {
+          return <Box key={index}>
+            <h2>{item?.name}</h2>
+            <Button  colorScheme={'green'} onClick={()=>handleAccept(item._id)}>Accept</Button>
+            <Button colorScheme={'red'}   onClick={()=>handleReject(item._id)}>Reject</Button>
+          </Box>
+        })}
+        </Box>
+          
+        }
+        
+        
     </Box>
   )
 }
 
-export default EventDetail
+export default EventDetail2

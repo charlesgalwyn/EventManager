@@ -43,7 +43,7 @@ function MyEvents() {
           <TagLabel>{event.category}</TagLabel>
         </Tag>
       </Box>
-      <Button colorScheme={'green'}  onClick={() => navigate(`/event/${event._id}`)/* navigate to event details page */ }>View details</Button>
+      <Button colorScheme={'green'}  onClick={() => navigate(`/event2/${event._id}`)/* navigate to event details page */ }>View details</Button>
     </Box>
   ))
 ) : (
